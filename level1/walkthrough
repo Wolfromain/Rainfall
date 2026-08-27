@@ -2,7 +2,7 @@
     level1
 
 >./level1
-(en attente d'une entree et quand on entree quoi que ce soit, ca ne fait rien)
+(en attente d'une entree et quand on entre quoi que ce soit, ca ne fait rien)
 1
 
 >gdb level1

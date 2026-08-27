@@ -16,6 +16,8 @@
         0x08048ede <+30>:	jne    0x8048f58 <main+152>
         0x08048ee0 <+32>:	movl   $0x80c5348,(%esp)
         [...]
+    p/d 0x1a7
+    >$1 = 423
     Ici on peut voir que l'argument que l'on envoie est compare a 423 (0x1a7 en Hex)
     Donc on connait le code pour faire fonctionner ./level0
     >exit
