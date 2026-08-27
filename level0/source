@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main(int argc, char **argv)
+{
+    int value = atoi(argv[1])
+    char	*cmd_args[2];
+	gid_t	gid;
+	uid_t	uid;
+    if (value == 423)
+    {
+        cmd_args[0] = strdup("/bin/bash");
+        cmd_args[1] = NULL;
+        gid = getegid();
+        uid = geteuid();
+        setresgid(gid, gid, gid);
+        setresuid(uid, uid, uid);
+        execv(cmd_args[0], cmd_args);
+    }
+    else
+    {
+        fwrite("No !\n", 1, 5, stderr);
+    }
+    return(0);
+}
