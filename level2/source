@@ -2,12 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-void p(void)
+void p(char *arg)
 {
     char buf[64];
 
     fflush(stdout);
     gets(buf);
+    if((arg & 2952790016) == 2952790016)
+    {
+        printf("(%p)\n", arg);
+        exit(1);
+    }
+    puts(buf)
+    strdup(buf);
 }
 
 int main(void)
