@@ -9,7 +9,7 @@ int run(void)
 
 int main(void)
 {
-    char buf[0x40];
+    char buf[64];
 
     gets(buf);
     return (0);
