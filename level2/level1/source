@@ -1,0 +1,17 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void p(void)
+{
+    char buf[64];
+
+    fflush(stdout);
+    gets(buf);
+}
+
+int main(void)
+{
+    p();
+    return (0);
+}
