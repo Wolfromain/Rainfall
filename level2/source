@@ -2,15 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-void p(char *arg)
+void p()
 {
     char buf[64];
+    int
 
     fflush(stdout);
     gets(buf);
-    if((arg & 2952790016) == 2952790016)
+    if((buf & 2952790016) == 2952790016)
     {
-        printf("(%p)\n", arg);
+        printf("(%p)\n", buf);
         exit(1);
     }
     puts(buf)
