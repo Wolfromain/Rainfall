@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void v()
+{
+    char buf[512];
+
+    str = fgets(buf);
+    printf("%s\n", str)
+    if (64 == )
+    {
+        fwrite("Wait what?!\n", stdout);
+        system("/bin/sh");
+    }
+    return();
+
+}
+
+int main(void)
+{
+    v();
+    return (0);
+}

