@@ -1,13 +1,13 @@
 >ls
-    level2
+    level3
 
->./level2
+>./level3
     >Test
     Test
 
 Quand on rentre quoique ce soit, ca le renvoie
 
-> gdb level2
+> gdb level3
 
 > info functions
     [...]
