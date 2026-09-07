@@ -73,7 +73,7 @@ Quand on rentre quoique ce soit, ca le renvoie
                                                 EDX = 0 (troisieme arg)
 cd 80          int 0x80             (déclenche le syscall numero 11)
 
-buffer est à ebp-0x4c donc 76 octets de ebp, on a 21 octets de shellcode on remplie avec 59 octets en laissant 4 octets pour l'adresse retour
+buffer est à (ebp-0x4c) donc 76 octets de ebp, on a 21 octets de shellcode on remplie avec 59 octets en laissant 4 octets pour l'adresse retour
 
 on veut l'adresse de la heap pour l'adresse de retour car elle ne commence pas par 0xb et donc on peut passer la verif. pour se faire
 dans gdb
@@ -97,4 +97,3 @@ uid=2021(level2) gid=2021(level2) euid=2022(level3) egid=100(users) groups=2022(
 
 >cat /home/user/level3/.pass
 492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
-
