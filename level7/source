@@ -1,0 +1,40 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+char c[68];
+
+void m(void)
+{
+    printf("%s - %d\n", c, time(0));
+}
+
+int main(int argc, char **argv)
+{
+    int* x1;
+    int* x2;
+    int* x3;
+    int* x4;
+    FILE *file;
+
+    x1 = malloc(8)
+    x1[0] = 1;
+
+    x2 = malloc(8)
+    x1[1] = x2;
+
+    x3 = malloc(8)
+    x3[0] = 2;
+
+    x4 = malloc(8)
+    x3[1] = x4;
+
+    strcpy(x1[1], argv[1]);
+    strcpy(x3[1], argv[2]);
+
+    file = fopen("/home/user/level8/.pass", "r");
+
+    fgets(c, 68, file);
+
+    puts("~~");
+}
