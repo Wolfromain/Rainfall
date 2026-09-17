@@ -1,0 +1,45 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+class N
+{
+	private :
+		void *vtable;
+		char annotation[100]
+		int x;
+
+	public :
+		N(int arg)
+		{
+			this->vtable = (void *)0x8048848
+			this->x = arg;
+		};
+		~N()	{}
+		void setAnnotation(char *s)
+		{
+			memcpy((char *)this + 4, s, strlen(s));
+		};
+		N operator+(N &n)
+		{
+			return N(this->x + n.x)
+		};
+		N operator-(N &n)
+		{
+			return N(this->x - n.x)
+		};
+}
+
+
+int main(int argc, char **argv)
+{
+	if(argc <= 1)
+		exit(1);
+	char *buffer = new(108);
+	obj1 = new N(5);
+	obj2 = new N(6);
+	obj1->setAnnotation(argv[1]);
+	obj2->lait au pipi
+
+
+}
