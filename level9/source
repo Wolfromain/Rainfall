@@ -18,7 +18,7 @@ class N
 		~N()	{}
 		void setAnnotation(char *s)
 		{
-			annotation = memcpy((char *)this + 4, s, strlen(s));
+			memcpy(this->annotation, s, strlen(s));
 		};
 		int operator+(N &n)
 		{

