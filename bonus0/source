@@ -1,4 +1,37 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+
+void p(char *str, char *sep)
+{
+	char *buffer[4104];
+
+	puts(sep);
+	read(0, buffer, 4096);
+	
+	char *pos = strchr(buffer, '\n');
+	*pos = \0;
+	strncpy(str, buffer, 20);
+}
+
+char *pp(char *str)
+{
+	char	s1[20];
+	char	s2[20];
+
+	p(s1, "-");
+	p(s2, "-");
+
+	strcpy(str, s1);
+	str[strlen(str)] = ' ';
+	strcat(str, s2);
+}
+
 int main(int argc, char **argv)
 {
-	pp()
+	char buf[60];
+
+	puts(pp(buf));
+	return(0);
 }
