@@ -26,7 +26,7 @@ char *pp(char *str)
 	strcpy(str, s1);
 	str[strlen(str)] = ' ';
 	strcat(str, s2);
-}
+}	
 
 int main(int argc, char **argv)
 {
