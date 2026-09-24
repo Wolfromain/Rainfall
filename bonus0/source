@@ -9,7 +9,7 @@ void p(char *str, char *sep)
 
 	puts(sep);
 	read(0, buffer, 4096);
-	
+
 	char *pos = strchr(buffer, '\n');
 	*pos = \0;
 	strncpy(str, buffer, 20);

