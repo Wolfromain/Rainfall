@@ -7,14 +7,14 @@ int language = 0;
 
 int main(int argc, char **argv)
 {
-	char *buffer[76];
+	char buffer[76];
 
 	if (argc != 3)
 		return(1);
 
 	memset(buffer, 0, 76);
 	strncpy(buffer, argv[1], 40);
-	strncpy(buffer, argv[2], 32);
+	strncpy(buffer + 40, argv[2], 32);
 	char *env = getenv("LANG");
 
 	if (env != 0)
@@ -22,15 +22,15 @@ int main(int argc, char **argv)
 		if (memcmp(env, "fi", 2) == 0)
 			language = 1;
 		else if (memcmp(env, "nl", 2) == 0)
-			language = 2
+			language = 2;
 	}
 	greetuser(buffer);
 	return(0);
 }
 
-void greetuser(char *buf)
+void greetuser(char buf)
 {
-	char *buffer[72];
+	char buffer[72];
 
 	if (language == 1)
 		strcpy(buffer, "Hyvää päivää ");
