@@ -149,7 +149,7 @@ $1 = 0xbfffe670
 0xbfffe6f8:	0x00	0x00	0x00	0x00
 
 Le NOP sled commence a cette adresse 0xbfffe670
-Donc pour choisir l'adresse du nop sled a mettre dans le second argument, on peut simplement prendre une adresse situee vers le "milieu", 0xbfffe698
+Donc pour choisir l'adresse du nop sled a mettre dans le second argument, on peut simplement prendre une des adresse, 0xbfffe6d0
 0xbfffe6d0 en little endian "\xd0\xe6\xff\xbf"
 
 Le cat garde enfin l'entree ouverte. Sans lui, le shell lance par le shellcode pourrait se fermer directement
