@@ -8,7 +8,7 @@ int mian(int argc, char **argv)
 	FILE *file;
 	char buffer(132);
 
-	file = fopen("/home/user/end/.pass", r);
+	file = fopen("/home/user/end/.pass", "r");
 	memset(buffer, 0, 33);
 	if (!file || argc != 2)
 		return(1)

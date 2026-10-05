@@ -65,7 +65,7 @@ On le voit ici a la 4eme position
 quand on regarde exit on voit qu'il jump vers une autre fonction.
 
 on veut alors changer la fonction vers laquelle jump le exit par la fonction o.
-la fonction o commence à 0x080484a4, on retire 4 bytes pour l'adresse du jump d'exit on a donc 0x0804840 = 134513824 en décimal.
+la fonction o commence à 0x080484a4, on retire 4 bytes pour ajouter l'adresse du jump d'exit on a donc 0x080484a0 = 134513824 en décimal.
 
 On doit donc envoyer l'adresse + un padding de 134513824 à la 4ème position de la stack.
 

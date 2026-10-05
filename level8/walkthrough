@@ -146,7 +146,7 @@ Dump of assembler code for function main:
 > ./level8
 (nil), (nil)
 
-Après inspection du main on voit qu'il y a un printf de 2 pointeurs qui sont donc null pour le moment.
+Après inspection du main on voit qu'il y a un printf de 2 pointeurs qui sont null pour le moment.
 
 Plus bas on voit qu'il y a une comparaison entre la chaine de caractère "auth " et le buffer
 
